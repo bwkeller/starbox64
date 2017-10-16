@@ -22,4 +22,4 @@ def hcp(n_side):
                 x[-1] -= 0.5
                 y[-1] -= 0.5
                 z[-1] -= 0.5
-    return x,y,z
+    return np.array([x,y,z]).T
