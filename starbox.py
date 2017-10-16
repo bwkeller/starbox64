@@ -13,6 +13,20 @@ MYR_IN_CGS = 3.154e13
 K_B = 1.381e-16
 ZSOL = 0.013
 
+def generate_mass_arr(args):
+    if args.number_density:
+        mass = MP_IN_CGS * args.number_density * np.power(PC_IN_CGS *
+                args.boxSize, 3) / args.boxN * np.ones(np.power(args.boxN, 3))
+    elif args.mass_density:
+        mass = MSOL_IN_CGS * args.mass_density * (np.power(args.boxSize, 3) /
+                args.boxN * np.ones(np.power(args.boxN, 3)))
+    elif args.gas_mass:
+        mass = MSOL_IN_CGS * args.gas_mass * np.ones(np.power(args.boxN, 3))
+    else:
+        raise RuntimeError("Cannot calculate density!")
+    return mass
+    
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("boxSize", help="The size of the box, in parsecs", type=float)
@@ -33,3 +47,4 @@ if __name__ == "__main__":
     group.add_argument("-g", "--gas_mass", help="The gas particle mass, in solar masses",
             type=float)
     args = parser.parse_args()
+
