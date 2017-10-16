@@ -1,8 +1,8 @@
-import numpy as np
 """
 Geometry includes modules for generating x,y,z positions for a particle grid.
 All methods will generate cubes with side length of 1, centered at 0.5.
 """
+import numpy as np
 
 def hcp(n_side):
     """
