@@ -1,6 +1,7 @@
 #!/usr/bin/env python
-import numpy as np
 import argparse
+import numpy as np
+import geometry
 
 # Units in CGS
 PC_IN_CGS = 3.086e18
@@ -19,8 +20,11 @@ if __name__ == "__main__":
     parser.add_argument("starMass", 
             help="The mass of the star particle(s) in solar masses", type=float)
     parser.add_argument("-z", "--zmetal", 
-            help="The metallicity of the gas, either as a fraction or a multiple of solar (eg, 0.013 or 1S)", 
+            help="""The metallicity of the gas, either as a fraction 
+            or a multiple of solar (eg, 0.013 or 1S)""", 
             type=str)
+    parser.add_argument("-f", "--format", help="""The output format for the initial conditions.
+            Currently supported formats are NONE.""", type=str)
     group = parser.add_mutually_exclusive_group(required=True)
     group.add_argument("-n", "--number_density", help="The density of the gas, in H/cc",
             type=float)
