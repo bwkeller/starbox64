@@ -1,6 +1,7 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 import argparse
 import numpy as np
+import iowriter
 import geometry
 
 # Units in CGS
@@ -25,7 +26,7 @@ def generate_mass_arr(args):
     else:
         raise RuntimeError("Cannot calculate density!")
     return mass
-    
+
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
@@ -38,7 +39,7 @@ if __name__ == "__main__":
             or a multiple of solar (eg, 0.013 or 1S)""", 
             type=str)
     parser.add_argument("-f", "--format", help="""The output format for the initial conditions.
-            Currently supported formats are NONE.""", type=str)
+            Currently supported formats are ArepoHDF.""", type=str)
     group = parser.add_mutually_exclusive_group(required=True)
     group.add_argument("-n", "--number_density", help="The density of the gas, in H/cc",
             type=float)
@@ -47,4 +48,7 @@ if __name__ == "__main__":
     group.add_argument("-g", "--gas_mass", help="The gas particle mass, in solar masses",
             type=float)
     args = parser.parse_args()
-
+    
+    fname = "box_%d_%3.2e_pc_%3.2e_star.hdf5" % (args.boxN, args.boxSize, args.starMass)
+    fname = "test.hdf5"
+    iowriter.write_arepo_HDF(fname, np.power(args.boxN, 3), generate_mass_arr(args), geometry.hcp(args.boxN))
