@@ -1,27 +1,35 @@
 import h5py
 import numpy as np
 
-def write_arepo_HDF(fname, N, gas_mass, gas_pos, part_type=6):
+def write_arepo_HDF(fname, N, box_size, gas_mass, gas_pos, star_mass, part_type=6):
     f = h5py.File(fname, 'w')
     config = f.create_group('Config')
     header = f.create_group('Header')
     params = f.create_group('Parameters')
     gas = f.create_group('PartType0')
-    stars = f.create_group('PartType1')
+    stars = f.create_group('PartType4')
 
     zeropart = np.zeros(part_type)
     numpart = np.zeros(part_type)
     numpart[0] = N
+    numpart[4] = 1
+    masspart = np.zeros(part_type, dtype='<f8')
+    masspart[0] = gas_mass
+    masspart[4] = star_mass
 
     header.attrs['NumPart_ThisFile'] = numpart
     header.attrs['NumPart_Total'] = numpart
     header.attrs['NumPart_Total_HighWord'] = zeropart
 
-    header.attrs['MassTable'] = zeropart
+    header.attrs['MassTable'] = masspart
     header.attrs['Time'] = 0
     header.attrs['Redshift'] = 0
-    header.attrs['BoxSize'] = 1
-    header.attrs['NumFilesPerSnapshot'] = 0
+    header.attrs['BoxSize'] = box_size
+    header.attrs['NumFilesPerSnapshot'] = 1
+
+    header.attrs['UnitLength_in_cm'] = 1
+    header.attrs['UnitMass_in_g'] = 1
+    header.attrs['UnitVelocity_cm_per_s'] = 1
 
     # Cosmology is not important here, we aren't using comoving coordinates
     header.attrs['Omega0'] = 0
@@ -32,11 +40,13 @@ def write_arepo_HDF(fname, N, gas_mass, gas_pos, part_type=6):
     header.attrs['Flag_Sfr'] = 0
     header.attrs['Flag_Cooling'] = 0
     header.attrs['Flag_StellarAge'] = 0
-    header.attrs['Flag_Metals'] = 0
-    header.attrs['Flag_Feedback'] = 0
+    header.attrs['Flag_Metals'] = 1
+    header.attrs['Flag_Feedback'] = 1
     header.attrs['Flag_DoublePrecision'] = 1
-    gas['Masses'] = gas_mass
     gas['Velocities'] = np.zeros((N, 3))
-    gas['Coordinates'] = gas_pos
+    gas['Coordinates'] = gas_pos*box_size
     gas['ParticleIDs'] = np.arange(N)+1
+    stars['Velocities'] = np.zeros((1,3))
+    stars['Coordinates'] = np.zeros((1,3))
+    stars['ParticleIDs'] = [0]
     f.close()
