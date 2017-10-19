@@ -14,15 +14,15 @@ MYR_IN_CGS = 3.154e13
 K_B = 1.381e-16
 ZSOL = 0.013
 
-def generate_mass_arr(args):
+def calc_mass(args):
     if args.number_density:
         mass = MP_IN_CGS * args.number_density * np.power(PC_IN_CGS *
-                args.boxSize, 3) / args.boxN * np.ones(np.power(args.boxN, 3))
+                args.boxSize, 3) / args.boxN 
     elif args.mass_density:
         mass = MSOL_IN_CGS * args.mass_density * (np.power(args.boxSize, 3) /
-                args.boxN * np.ones(np.power(args.boxN, 3)))
+                args.boxN)
     elif args.gas_mass:
-        mass = MSOL_IN_CGS * args.gas_mass * np.ones(np.power(args.boxN, 3))
+        mass = MSOL_IN_CGS * args.gas_mass 
     else:
         raise RuntimeError("Cannot calculate density!")
     return mass
@@ -51,4 +51,5 @@ if __name__ == "__main__":
     
     fname = "box_%d_%3.2e_pc_%3.2e_star.hdf5" % (args.boxN, args.boxSize, args.starMass)
     fname = "test.hdf5"
-    iowriter.write_arepo_HDF(fname, np.power(args.boxN, 3), generate_mass_arr(args), geometry.hcp(args.boxN))
+    iowriter.write_arepo_HDF(fname, np.power(args.boxN, 3), args.boxSize*PC_IN_CGS, calc_mass(args),
+            geometry.hcp(args.boxN), args.starMass*MSOL_IN_CGS)
