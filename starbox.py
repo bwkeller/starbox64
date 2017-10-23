@@ -51,5 +51,5 @@ if __name__ == "__main__":
     
     fname = "box_%d_%3.2e_pc_%3.2e_star.hdf5" % (args.boxN, args.boxSize, args.starMass)
     fname = "test.hdf5"
-    iowriter.write_arepo_HDF(fname, np.power(args.boxN, 3), args.boxSize*PC_IN_CGS, calc_mass(args),
+    iowriter.write_arepo_HDF(fname, args.boxSize*PC_IN_CGS, calc_mass(args),
             geometry.hcp(args.boxN), args.starMass*MSOL_IN_CGS)
