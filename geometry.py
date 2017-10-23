@@ -13,9 +13,12 @@ def hcp(n_side):
     y = []
     z = []
     for i in range(n_side):
-        for j in range(n_side):
-            for k in range(n_side):
+        for j in range(n_side+1):
+            for k in range(n_side+2):
                 x.append((2*i+((j+k) % 2))/float(2*n_side))
                 y.append(np.sqrt(3)*(j+1./3*(k % 2))/float(2*n_side))
                 z.append(2*np.sqrt(6)*k/(3*float(2*n_side)))
-    return np.array([x,y,z]).T
+    arr = np.array([x,y,z]).T
+    # Shift the HCP lattice to the center of the box
+    arr = arr + np.stack([(1.0 - arr.max(axis=0))/2. for _ in range(arr.shape[0])])
+    return arr
