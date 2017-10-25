@@ -62,7 +62,7 @@ if __name__ == "__main__":
     gas_mass = calc_mass(args, pos.shape[0])
     print("Stellar Mass: %g Msol" % args.starMass)
     print ("Generating Box with %d particles" % pos.shape[0])
-    print("Particle Mass: %g Msol" % gas_mass)
+    print("Particle Mass: %e Msol" % (gas_mass/MSOL_IN_CGS))
     if(args.cgs):
         iowriter.write_arepo_HDF(fname, args.boxSize*PC_IN_CGS, gas_mass,
                 pos, args.starMass*MSOL_IN_CGS)
