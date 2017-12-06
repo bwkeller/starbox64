@@ -9,8 +9,8 @@ def hcp(n_side):
     Hexagonal close-pack.  Return x,y,z ndarrays for n_side^3 particles
     in a Hexagonal Close Pack grid.  
     """
-    idx = np.concatenate(np.meshgrid(range(n_side), range(n_side+1), range(n_side+2),
-        indexing='ij')).reshape(3, n_side*(n_side+1)*(n_side+2))
+    idx = np.concatenate(np.meshgrid(range(n_side), range(n_side), range(n_side),
+        indexing='ij')).reshape(3, n_side*(n_side)*(n_side))
     i = idx[0]
     j = idx[1]
     k = idx[2]
@@ -19,7 +19,6 @@ def hcp(n_side):
     z = 2*np.sqrt(6)*k/(3*float(2*n_side))
     arr = np.array([x,y,z]).T
     # Shift the HCP lattice to the center of the box
-    edge = (1 - np.array([(2*(n_side-1)+1)/float(2*n_side), np.sqrt(3)*(n_side+1./3)/float(2*n_side),
-            2*np.sqrt(6)*(n_side+1)/(6*float(n_side))]))/2.0
-    arr = arr + np.stack([edge for _ in range(arr.shape[0])])
+    edge = arr.max(axis=0)+np.sqrt(6)/(6.*n_side)
+    arr = arr / np.stack([edge for _ in range(arr.shape[0])])
     return arr
