@@ -57,7 +57,6 @@ if __name__ == "__main__":
     args = parser.parse_args()
     
     fname = "box_%d_%3.2e_pc_%3.2e_star.hdf5" % (args.boxN, args.boxSize, args.starMass)
-    fname = "test.hdf5"
     pos = geometry.hcp(args.boxN)
     gas_mass = calc_mass(args, pos.shape[0])
     print("Stellar Mass: %g Msol" % args.starMass)
