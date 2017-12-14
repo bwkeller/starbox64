@@ -1,7 +1,7 @@
 import h5py
 import numpy as np
 
-def write_arepo_HDF(fname, box_size, gas_mass, gas_pos, star_mass, part_type=6):
+def write_arepo_HDF(fname, box_size, gas_mass, gas_pos, star_mass, len_unit, mass_unit, vel_unit, part_type=6):
     f = h5py.File(fname, 'w')
     config = f.create_group('Config')
     header = f.create_group('Header')
@@ -28,9 +28,9 @@ def write_arepo_HDF(fname, box_size, gas_mass, gas_pos, star_mass, part_type=6):
     header.attrs['BoxSize'] = box_size
     header.attrs['NumFilesPerSnapshot'] = 1
 
-    header.attrs['UnitLength_in_cm'] = 1
-    header.attrs['UnitMass_in_g'] = 1
-    header.attrs['UnitVelocity_cm_per_s'] = 1
+    header.attrs['UnitLength_in_cm'] = len_unit
+    header.attrs['UnitMass_in_g'] = mass_unit
+    header.attrs['UnitVelocity_cm_per_s'] = vel_unit
 
     # Cosmology is not important here, we aren't using comoving coordinates
     header.attrs['Omega0'] = 0

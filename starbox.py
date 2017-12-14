@@ -64,4 +64,7 @@ if __name__ == "__main__":
     print("Particle Mass: %e Msol" % (gas_mass/MSOL_IN_CGS))
     if(args.cgs):
         iowriter.write_arepo_HDF(fname, args.boxSize*PC_IN_CGS, gas_mass,
-                pos, args.starMass*MSOL_IN_CGS)
+                pos, args.starMass*MSOL_IN_CGS, 1, 1, 1)
+    if(args.msol):
+        iowriter.write_arepo_HDF(fname, args.boxSize, gas_mass/MSOL_IN_CGS,
+                pos, args.starMass, PC_IN_CGS, MSOL_IN_CGS, 1e5)
