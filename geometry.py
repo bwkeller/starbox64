@@ -22,3 +22,15 @@ def hcp(n_side):
     edge = arr.max(axis=0)+np.sqrt(6)/(6.*n_side)
     arr = arr / np.stack([edge for _ in range(arr.shape[0])])
     return arr
+
+def slice_ball(arr, radius, center=(0.5,0.5,0.5)):
+    arr -= np.tile(center, (arr.shape[0], 1))
+    r = np.linalg.norm(arr, axis=1)
+    inside = np.where(r <= radius)
+    outside = np.where(r > radius)
+    ball = arr[inside]
+    hole = arr[outside]
+    ball += np.tile(center, (ball.shape[0], 1))
+    hole += np.tile(center, (hole.shape[0], 1))
+    arr += np.tile(center, (arr.shape[0], 1))
+    return (ball, hole)

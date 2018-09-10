@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 import argparse
+from scipy import optimize
 import numpy as np
 import iowriter
 import geometry
@@ -42,6 +43,8 @@ if __name__ == "__main__":
             type=str)
     parser.add_argument("-f", "--format", help="""The output format for the initial conditions.
             Currently supported formats are ArepoHDF.""", type=str)
+    parser.add_argument("-o", "--overdensity", help="""Add a spherical overdensity of radius r 
+            and mass m in the format -o/--overdensity r,m.""", type=str)
     units = parser.add_mutually_exclusive_group()
     units.add_argument("-c", "--cgs", help="Code units will be written out in CGS",
             action='store_true', default=False)
@@ -59,6 +62,22 @@ if __name__ == "__main__":
     fname = "box_%d_%3.2e_pc_%3.2e_star.hdf5" % (args.boxN, args.boxSize, args.starMass)
     pos = geometry.hcp(args.boxN)
     gas_mass = calc_mass(args, pos.shape[0])
+    if(args.overdensity):
+        ball_r = float(args.overdensity.split(',')[0])
+        ball_m = MSOL_IN_CGS*float(args.overdensity.split(',')[1])
+        null,hole = geometry.slice_ball(pos, ball_r/args.boxSize)
+        N_box = int(np.power(6*ball_m/(np.pi*gas_mass), 1./3))
+        ball_pos = geometry.hcp(2*N_box)
+        cntr=np.random.rand(1,3)/(1e5*N_box)+np.array((0.5,0.5,0.5))
+        def iterate_ball(r):
+            ball,null = geometry.slice_ball(ball_pos, r, center=cntr)
+            return ball_m/gas_mass-ball.shape[0]
+        r = optimize.bisect(iterate_ball, 0.25, 0.5)
+        ball,null = geometry.slice_ball(ball_pos, r, center=cntr)
+        ball -= 0.5
+        ball *= ball_r/(args.boxSize*np.linalg.norm(ball).max())
+        ball += 0.5
+        pos = np.concatenate((ball,hole))
     print("Stellar Mass: %g Msol" % args.starMass)
     print ("Generating Box with %d particles" % pos.shape[0])
     print("Particle Mass: %e Msol" % (gas_mass/MSOL_IN_CGS))

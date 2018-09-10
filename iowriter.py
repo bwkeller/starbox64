@@ -7,7 +7,6 @@ def write_arepo_HDF(fname, box_size, gas_mass, gas_pos, star_mass, len_unit, mas
     header = f.create_group('Header')
     params = f.create_group('Parameters')
     gas = f.create_group('PartType0')
-    stars = f.create_group('PartType4')
 
     zeropart = np.zeros(part_type)
     numpart = np.zeros(part_type)
@@ -15,7 +14,6 @@ def write_arepo_HDF(fname, box_size, gas_mass, gas_pos, star_mass, len_unit, mas
     numpart[4] = 1
     masspart = np.zeros(part_type, dtype='<f8')
     masspart[0] = gas_mass
-    masspart[4] = star_mass
 
     header.attrs['NumPart_ThisFile'] = numpart
     header.attrs['NumPart_Total'] = numpart
@@ -50,8 +48,11 @@ def write_arepo_HDF(fname, box_size, gas_mass, gas_pos, star_mass, len_unit, mas
     gas['Coordinates'] = gas_pos*box_size
     gas['ParticleIDs'] = np.arange(gas_pos.shape[0])+1
     gas['AllowRefinement'] = np.ones(gas_pos.shape[0])
-    stars['Velocities'] = np.zeros((1,3))
-    stars['Coordinates'] = np.ones((1,3))*box_size/2.
-    stars['StellarAge'] = [0]
-    stars['ParticleIDs'] = [0]
+    if(star_mass > 0):
+        stars = f.create_group('PartType4')
+        masspart[4] = star_mass
+        stars['Velocities'] = np.zeros((1,3))
+        stars['Coordinates'] = np.ones((1,3))*box_size/2.
+        stars['StellarAge'] = [0]
+        stars['ParticleIDs'] = [0]
     f.close()
