@@ -44,9 +44,9 @@ if __name__ == "__main__":
             Currently supported formats are ArepoHDF.""", type=str)
     units = parser.add_mutually_exclusive_group()
     units.add_argument("-c", "--cgs", help="Code units will be written out in CGS",
-            action='store_true', default=True)
-    units.add_argument("-m", "--msol", help="Code units will be written out MSol, pc, km/s",
             action='store_true', default=False)
+    units.add_argument("-m", "--msol", help="Code units will be written out MSol, pc, km/s",
+            action='store_true', default=True)
     mass_den = parser.add_mutually_exclusive_group(required=True)
     mass_den.add_argument("-n", "--number_density", help="The density of the gas, in H/cc",
             type=float)
