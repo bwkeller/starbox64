@@ -75,7 +75,7 @@ if __name__ == "__main__":
         r = optimize.bisect(iterate_ball, 0.25, 0.5)
         ball,null = geometry.slice_ball(ball_pos, r, center=cntr)
         ball -= 0.5
-        ball *= ball_r/(args.boxSize*np.linalg.norm(ball).max())
+        ball *= ball_r/(args.boxSize*np.linalg.norm(ball, axis=1).max())
         ball += 0.5
         pos = np.concatenate((ball,hole))
     print("Stellar Mass: %g Msol" % args.starMass)
